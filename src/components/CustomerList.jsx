@@ -41,7 +41,7 @@ export default function CustomerList() {
 
     return (
         <div className="CustomerList">
-            <div className="ag-theme-material" style={{ width: '100%', height: 500}}>
+            <div className="ag-theme-material" style={{ width: '100%', height: 600}}>
                 <AgGridReact
                     defaultColDef={defaultColDef}
                     autoSizeStrategy={autoSizeStrategy}
