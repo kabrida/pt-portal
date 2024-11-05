@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
+import { Button } from "@mui/material";
+import AddCustomer from "./AddCustomer";
+import EditCustomer from "./EditCustomer";
 
 export default function CustomerList() {
     const [customers, setCustomers] = useState([]);
@@ -15,6 +18,18 @@ export default function CustomerList() {
         { headerName: 'Postcode', field: 'postcode'},
         { headerName: 'Email', field: 'email'},
         { headerName: 'Phone', field: 'phone'},
+        { headerName: '',
+            field: '_links.self.href',
+            sortable: false,
+            filter: false,
+            cellRenderer: params => <Button variant="contained" color="error" onClick={() => deleteCustomer(params.data)}>Delete</Button>
+        },
+        { headerName: '', 
+            field: '_links.self.href',
+            sortable: false,
+            filter: false,
+            cellRenderer: params => <EditCustomer editCustomer={editCustomer} currentCustomer={params.data} />
+        }
     ]);
 
     const defaultColDef = {
@@ -37,10 +52,65 @@ export default function CustomerList() {
         }
     };
 
+    const deleteCustomer = async (customer) => {
+        const url = customer._links.self.href;
+        const options = {
+            method: 'DELETE'
+        }
+
+        try {
+            if (confirm(`Are you sure you want to delete customer ${customer.firstname} ${customer.lastname}?`)) {
+            const response = await fetch(url, options);
+            fetchCustomers();
+            }
+        } catch (err) {
+            console.error(err);
+        }
+
+    };
+
+    const addCustomer = async (customer) => {
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(customer)
+        }
+
+        try {
+        const response = await fetch('https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/customers', options);
+        const data = await response.json();
+        fetchCustomers();
+        } catch (error) {
+            console.error("Failed to add customer:", error);
+        }
+
+    };
+
+    const editCustomer = async (customer, url) => {
+        const options = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(customer)
+        }
+
+        try {
+            const response = await fetch(url, options);
+            const data = await response.json();
+            fetchCustomers();
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     useEffect(() => fetchCustomers, []);
 
     return (
         <div className="CustomerList">
+            <AddCustomer addCustomer={addCustomer} />
             <div className="ag-theme-material" style={{ width: '100%', height: 600}}>
                 <AgGridReact
                     defaultColDef={defaultColDef}

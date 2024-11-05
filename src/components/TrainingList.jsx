@@ -3,6 +3,7 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
 import dayjs from "dayjs";
+import { Button } from "@mui/material";
 
 // ValueGetter lähde: https://www.ag-grid.com/javascript-data-grid/value-getters/
 // ValueFormatter lähde: https://www.ag-grid.com/javascript-data-grid/value-formatters/
@@ -13,7 +14,8 @@ export default function CustomerList() {
 
     const [columnDefs, setColumnDefs] = useState([
         { headerName: 'Date and Time', field: 'date',
-            valueFormatter: p => dayjs(p.value).format('DD.MM.YYYY HH:mm')
+            valueFormatter: p => dayjs(p.value).format('DD.MM.YYYY HH:mm'),
+            sort: 'asc'
         },
         { headerName: 'Duration', field: 'duration',
             valueFormatter: p => p.value +  ' minutes'
@@ -22,6 +24,11 @@ export default function CustomerList() {
         { 
             headerName: 'Customer',  
             valueGetter: p => `${p.data.customer.firstname} ${p.data.customer.lastname}`
+        },
+        { headerName: '',
+            field: 'id',
+            sortable: false,
+            filter: false,
         }
     ]);
 
@@ -45,11 +52,15 @@ export default function CustomerList() {
         }
     };
 
+    const deleteTraining = async (training) => {
+
+    }
+ 
 
     useEffect(() => fetchTrainings, []);
 
     return (
-        <div className="CustomerList">
+        <div className="TrainingList">
             <div className="ag-theme-material" style={{ width: '100%', height: 600 }}>
                 <AgGridReact
                     defaultColDef={defaultColDef}
