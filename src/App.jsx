@@ -2,7 +2,7 @@ import CustomerList from './components/customerList';
 import TrainingList from './components/TrainingList';
 import Home from './components/Home';
 import ErrorPage from './components/ErrorPage';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 import { Toolbar, Typography, AppBar, Container, CssBaseline, Button } from '@mui/material';
 import './App.css'
