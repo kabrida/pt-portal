@@ -2,9 +2,12 @@ import { useState, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import AddCustomer from "./AddCustomer";
 import EditCustomer from "./EditCustomer";
+import { CSVLink } from "react-csv";
+
+// CSV kirjaston lähde: https://www.npmjs.com/package/react-csv
 
 export default function CustomerList() {
     const [customers, setCustomers] = useState([]);
@@ -108,9 +111,26 @@ export default function CustomerList() {
 
     useEffect(() => fetchCustomers, []);
 
+    const customerDataForCSV = customers.map(customer => ({
+        Name: `${customer.lastname} ${customer.firstname}`,
+        Address: customer.streetaddress,
+        Postcode: customer.postcode,
+        Email: customer.email,
+        Phone: customer.phone
+    }));
+
     return (
         <div className="CustomerList">
+            <Box mb={2}>
             <AddCustomer addCustomer={addCustomer} />
+            </Box>
+            <Box mb={2}>
+            <CSVLink
+            filename="customers.csv"
+            data={customerDataForCSV}>
+                <Button variant="contained" color="secondary">Export to CSV</Button>
+            </CSVLink>
+            </Box>
             <div className="ag-theme-material" style={{ width: '100%', height: 600}}>
                 <AgGridReact
                     defaultColDef={defaultColDef}
