@@ -10,6 +10,7 @@ import { CSVLink } from "react-csv";
 // CSV kirjaston lähde: https://www.npmjs.com/package/react-csv
 
 export default function CustomerList() {
+    console.log("CustomerList component rendered");
     const [customers, setCustomers] = useState([]);
 
     const [columnDefs, setColumnDefs] = useState([
@@ -47,8 +48,10 @@ export default function CustomerList() {
     // Asiakastietojen haku
     const fetchCustomers = async () => {
         try {
+        console.log("Fetching customers...");
         const response = await fetch("https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/customers");
         const data = await response.json();
+        console.log(data);
         setCustomers(data._embedded.customers);
         } catch (error) {
             console.error("Failed to fetch customers:", error);
@@ -109,7 +112,7 @@ export default function CustomerList() {
         }
     };
 
-    useEffect(() => fetchCustomers, []);
+    useEffect(() => {fetchCustomers()}, []);
 
     const customerDataForCSV = customers.map(customer => ({
         Name: `${customer.lastname} ${customer.firstname}`,

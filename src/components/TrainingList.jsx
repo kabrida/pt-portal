@@ -97,7 +97,7 @@ export default function CustomerList() {
     };
 
 
-    useEffect(() => fetchTrainings, []);
+    useEffect(() => {fetchTrainings()}, []);
 
     return (
         <div className="TrainingList">
